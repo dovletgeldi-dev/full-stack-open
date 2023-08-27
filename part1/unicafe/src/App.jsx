@@ -1,35 +1,82 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+/* eslint-disable react/prop-types */
+import { useState } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
+const Feedback = () => {
+  return <h1>give feedback</h1>;
+};
 
+const Button = (props) => {
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div>
+      <button onClick={props.handleClick}>{props.text}</button>
+    </div>
+  );
+};
 
-export default App
+const Statistics = () => {
+  return <h1>statistics</h1>;
+};
+
+const Counter = (props) => {
+  console.log(props);
+  return (
+    <div>
+      <p>good: {props.clicks.good}</p>
+      <p>neutral: {props.clicks.neutral}</p>
+      <p>bad: {props.clicks.bad}</p>
+    </div>
+  );
+};
+
+const App = () => {
+  // save clicks of each button to its own state
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+  const [clicks, setClicks] = useState({
+    good: 0,
+    neutral: 0,
+    bad: 0,
+  });
+
+  const handleGoodClick = () => {
+    setClicks({
+      ...clicks,
+      good: clicks.good + 1,
+    });
+    setGood(good + 1);
+  };
+
+  const handleNeutralClick = () => {
+    setClicks({
+      ...clicks,
+      neutral: clicks.neutral + 1,
+    });
+    setNeutral(neutral + 1);
+  };
+
+  const handleBadClick = () => {
+    setClicks({
+      ...clicks,
+      bad: clicks.bad + 1,
+    });
+    setBad(bad + 1);
+  };
+
+  console.log(good);
+  console.log(neutral);
+  console.log(bad);
+  return (
+    <div>
+      <Feedback />
+      <Button handleClick={handleGoodClick} text="good" />
+      <Button handleClick={handleNeutralClick} text="neutral" />
+      <Button handleClick={handleBadClick} text="bad" />
+      <br />
+      <Statistics />
+      <Counter clicks={clicks} />
+    </div>
+  );
+};
+
+export default App;
