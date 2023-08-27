@@ -1,29 +1,36 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 
-const Feedback = () => {
-  return <h1>give feedback</h1>;
+const Feedback = ({ text }) => {
+  return <h1>{text}</h1>;
 };
 
-const Button = (props) => {
+const Button = ({ handleClick, text }) => {
   return (
     <div>
-      <button onClick={props.handleClick}>{props.text}</button>
+      <button onClick={handleClick}>{text}</button>
     </div>
   );
 };
 
-const Statistics = () => {
-  return <h1>statistics</h1>;
+const Statistics = ({ text }) => {
+  return <h1>{text}</h1>;
 };
 
-const Counter = (props) => {
-  console.log(props);
+const Counter = ({ good, neutral, bad }) => {
+  const calculateAll = good + neutral + bad;
+  const calculateAverage = (good - bad) / (calculateAll || true);
+  const calculatePositiveFeedback = (100 * good) / (calculateAll || true);
+
   return (
     <div>
-      <p>good: {props.clicks.good}</p>
-      <p>neutral: {props.clicks.neutral}</p>
-      <p>bad: {props.clicks.bad}</p>
+      <p>good: {good}</p>
+      <p>neutral: {neutral}</p>
+      <p>bad: {bad}</p>
+      <p>all: {calculateAll}</p>
+      <p>average: {calculateAverage}</p>
+      <p>positive: {calculatePositiveFeedback}%</p>
     </div>
   );
 };
@@ -33,33 +40,16 @@ const App = () => {
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
-  const [clicks, setClicks] = useState({
-    good: 0,
-    neutral: 0,
-    bad: 0,
-  });
 
   const handleGoodClick = () => {
-    setClicks({
-      ...clicks,
-      good: clicks.good + 1,
-    });
     setGood(good + 1);
   };
 
   const handleNeutralClick = () => {
-    setClicks({
-      ...clicks,
-      neutral: clicks.neutral + 1,
-    });
     setNeutral(neutral + 1);
   };
 
   const handleBadClick = () => {
-    setClicks({
-      ...clicks,
-      bad: clicks.bad + 1,
-    });
     setBad(bad + 1);
   };
 
@@ -68,13 +58,13 @@ const App = () => {
   console.log(bad);
   return (
     <div>
-      <Feedback />
+      <Feedback text="give feedback" />
       <Button handleClick={handleGoodClick} text="good" />
       <Button handleClick={handleNeutralClick} text="neutral" />
       <Button handleClick={handleBadClick} text="bad" />
       <br />
-      <Statistics />
-      <Counter clicks={clicks} />
+      <Statistics text="statistics" />
+      <Counter good={good} neutral={neutral} bad={bad} />
     </div>
   );
 };
