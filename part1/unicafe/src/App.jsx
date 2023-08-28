@@ -23,6 +23,10 @@ const Counter = ({ good, neutral, bad }) => {
   const calculateAverage = (good - bad) / (calculateAll || true);
   const calculatePositiveFeedback = (100 * good) / (calculateAll || true);
 
+  if (calculateAll === 0) {
+    return <p>No Feedback Given</p>;
+  }
+
   return (
     <div>
       <p>good: {good}</p>
