@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 const Header = (props) => {
+  console.log(props);
   return (
     <div>
       <h1>{props.course}</h1>
