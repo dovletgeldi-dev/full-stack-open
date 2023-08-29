@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-const Header = ({ name }) => {
+const Header = ({ course: { name } }) => {
   return (
     <div>
       <h1>{name}</h1>
