@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-vars */
 import { useState } from "react";
-
+import Filter from "./components/Filter";
+import PersonForm from "./components/PersonForm";
+import Persons from "./components/Persons";
 const App = () => {
   const [persons, setPersons] = useState([
     { name: "Arto Hellas", number: "040-123456", id: 1 },
@@ -12,8 +14,6 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [filterQuery, setFilterQuery] = useState("");
 
-  console.log(persons);
-
   const addName = (event) => {
     event.preventDefault();
 
@@ -23,6 +23,7 @@ const App = () => {
       const nameObject = {
         name: newName,
         number: newNumber,
+        id: persons.length + 1,
       };
 
       setPersons(persons.concat(nameObject));
@@ -46,31 +47,19 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with{" "}
-        <input value={filterQuery} onChange={handleFilterQuery} />
-      </div>
-      <form onSubmit={addName}>
-        <h2>Add a new</h2>
-        <div>
-          name: <input value={newName} onChange={handleNameChange} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
+      <Filter query={filterQuery} handleQuery={handleFilterQuery} />
 
-      {persons
-        .filter((person) => person.name.toLowerCase().includes(filterQuery))
-        .map((person) => (
-          <p key={person.id}>
-            {person.name} {person.number}
-          </p>
-        ))}
+      <h3>Add a new</h3>
+      <PersonForm
+        handleAddName={addName}
+        name={newName}
+        handleName={handleNameChange}
+        number={newNumber}
+        handleNumber={handleNumberChange}
+      />
+
+      <h3>Numbers</h3>
+      <Persons persons={persons} filterQuery={filterQuery} />
     </div>
   );
 };
