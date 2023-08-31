@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
-import axios from "axios";
+import personService from "./services/persons";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
@@ -11,14 +11,10 @@ const App = () => {
   const [filterQuery, setFilterQuery] = useState("");
 
   useEffect(() => {
-    console.log("effect");
-    axios.get("http://localhost:3001/persons").then((response) => {
-      console.log("promise fulfilled");
+    personService.getAll().then((response) => {
       setPersons(response.data);
     });
   }, []);
-
-  console.log("render", persons.length, "data");
 
   const addName = (event) => {
     event.preventDefault();
@@ -29,12 +25,13 @@ const App = () => {
       const nameObject = {
         name: newName,
         number: newNumber,
-        id: persons.length + 1,
       };
 
-      setPersons(persons.concat(nameObject));
-      setNewName("");
-      setNewNumber("");
+      personService.create(nameObject).then((response) => {
+        setPersons(persons.concat(response.data));
+        setNewName("");
+        setNewNumber("");
+      });
     }
   };
 
