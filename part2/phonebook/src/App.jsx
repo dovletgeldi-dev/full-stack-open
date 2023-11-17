@@ -11,26 +11,61 @@ const App = () => {
   const [filterQuery, setFilterQuery] = useState("");
 
   useEffect(() => {
-    personService.getAll().then((response) => {
-      setPersons(response.data);
+    personService.getAll().then((initialPersons) => {
+      setPersons(initialPersons);
     });
   }, []);
 
-  const addName = (event) => {
+  const updatePerson = () => {
+    if (
+      !window.confirm(
+        `${newName} is already added to phonebook, replace the old number with a new one?`
+      )
+    )
+      return;
+
+    const person = persons.find((p) => p.id === p.id);
+    console.log(person);
+    const changedNumber = { ...person, number: newNumber };
+    personService.update(person.id, changedNumber).then((response) => {
+      setPersons(persons.map((p) => (p.id !== person.id ? p : response)));
+      setNewName("");
+      setNewNumber("");
+    });
+  };
+
+  const addPerson = (newPerson) => {
+    personService.create(newPerson).then((createPerson) => {
+      setPersons(persons.concat(createPerson));
+      setNewName("");
+      setNewNumber("");
+    });
+  };
+
+  const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (persons.some((person) => person.name === newName)) {
-      return alert(`${newName} is already added to phonebook`);
-    } else {
-      const nameObject = {
-        name: newName,
-        number: newNumber,
-      };
+    const newPerson = {
+      name: newName,
+      number: newNumber,
+    };
 
-      personService.create(nameObject).then((response) => {
-        setPersons(persons.concat(response.data));
-        setNewName("");
-        setNewNumber("");
+    if (persons.some((person) => person.name === newName)) {
+      updatePerson();
+    } else {
+      addPerson(newPerson);
+    }
+  };
+
+  const handlePersonDelete = (personToDeleteId) => {
+    console.log(personToDeleteId);
+    if (!window.confirm(`Delete ${personToDeleteId.name} ?`)) {
+      return null;
+    } else {
+      personService.deletePerson(personToDeleteId).then(() => {
+        setPersons(
+          persons.filter((person) => person.id !== personToDeleteId.id)
+        );
       });
     }
   };
@@ -54,7 +89,7 @@ const App = () => {
 
       <h3>Add a new</h3>
       <PersonForm
-        handleAddName={addName}
+        handleSubmit={handleSubmit}
         name={newName}
         handleName={handleNameChange}
         number={newNumber}
@@ -62,7 +97,11 @@ const App = () => {
       />
 
       <h3>Numbers</h3>
-      <Persons persons={persons} filterQuery={filterQuery} />
+      <Persons
+        persons={persons}
+        filterQuery={filterQuery}
+        handleDelete={handlePersonDelete}
+      />
     </div>
   );
 };

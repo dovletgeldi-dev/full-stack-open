@@ -1,18 +1,22 @@
 /* eslint-disable react/prop-types */
 const PersonForm = ({
-  handleAddName,
+  handleSubmit,
   name,
   number,
   handleNumber,
   handleName,
 }) => {
   return (
-    <form onSubmit={handleAddName}>
+    <form onSubmit={handleSubmit}>
       <div>
-        name: <input value={name} onChange={handleName} />
+        <label>
+          name: <input value={name} onChange={handleName} />
+        </label>
       </div>
       <div>
-        number: <input value={number} onChange={handleNumber} />
+        <label>
+          number: <input value={number} onChange={handleNumber} />
+        </label>
       </div>
       <div>
         <button type="submit">add</button>

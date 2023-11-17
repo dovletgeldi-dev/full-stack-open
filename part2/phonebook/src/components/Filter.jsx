@@ -2,7 +2,9 @@
 const Filter = ({ query, handleQuery }) => {
   return (
     <div>
-      filter shown with <input value={query} onChange={handleQuery} />
+      <label>
+        filter shown with <input value={query} onChange={handleQuery} />
+      </label>
     </div>
   );
 };
