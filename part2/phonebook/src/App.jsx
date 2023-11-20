@@ -4,11 +4,14 @@ import personService from "./services/persons";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import Notifications from "./components/Notifications";
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterQuery, setFilterQuery] = useState("");
+  const [message, setMessage] = useState(null);
+  const [isSuccess, setIsSuccess] = useState(null);
 
   useEffect(() => {
     personService.getAll().then((initialPersons) => {
@@ -37,6 +40,11 @@ const App = () => {
   const addPerson = (newPerson) => {
     personService.create(newPerson).then((createPerson) => {
       setPersons(persons.concat(createPerson));
+      setMessage(`Added ${newName}`);
+      setIsSuccess(true);
+      setTimeout(() => {
+        setMessage(null);
+      }, 3000);
       setNewName("");
       setNewNumber("");
     });
@@ -57,16 +65,31 @@ const App = () => {
     }
   };
 
-  const handlePersonDelete = (personToDeleteId) => {
-    console.log(personToDeleteId);
-    if (!window.confirm(`Delete ${personToDeleteId.name} ?`)) {
+  const handlePersonDelete = (personToDelete) => {
+    console.log(personToDelete);
+    if (!window.confirm(`Delete ${personToDelete.name} ?`)) {
       return null;
     } else {
-      personService.deletePerson(personToDeleteId).then(() => {
-        setPersons(
-          persons.filter((person) => person.id !== personToDeleteId.id)
-        );
-      });
+      personService
+        .deletePerson(personToDelete)
+        .then(() => {
+          setPersons(
+            persons.filter((person) => person.id !== personToDelete.id)
+          );
+        })
+        .catch((error) => {
+          console.log(error);
+          setIsSuccess(false);
+          setMessage(
+            `Information of ${personToDelete.name} has already been removed from server `
+          );
+          setPersons(
+            persons.filter((person) => person.id !== personToDelete.id)
+          );
+          setTimeout(() => {
+            setMessage(null);
+          }, 5000);
+        });
     }
   };
 
@@ -85,6 +108,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notifications message={message} isSuccess={isSuccess} />
       <Filter query={filterQuery} handleQuery={handleFilterQuery} />
 
       <h3>Add a new</h3>
