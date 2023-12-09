@@ -1,6 +1,9 @@
 const express = require("express");
 const app = express();
 
+const date = new Date().toString();
+console.log(date);
+
 let persons = [
   {
     id: 1,
@@ -24,8 +27,10 @@ let persons = [
   },
 ];
 
-app.get("/", (req, res) => {
-  res.send("<h1>Hello</h1>");
+app.get("/info", (req, res) => {
+  res.send(
+    `<p>Phonebook has info for ${persons.length} people</p><p>${date}</p>`
+  );
 });
 
 app.get("/api/persons", (req, res) => {
