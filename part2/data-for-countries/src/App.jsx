@@ -26,11 +26,11 @@ function App() {
 
   return (
     <div>
-      <div>
+      <label>
         find countries <input value={name} onChange={handleSearch} />
-      </div>
+      </label>
       <div>
-        <Country name={name} country={country} />
+        <Country name={name} country={country} key={country.id} />
       </div>
     </div>
   );
