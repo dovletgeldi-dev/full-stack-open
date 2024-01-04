@@ -1,7 +1,16 @@
 const express = require("express");
+const morgan = require("morgan");
 const app = express();
 
 app.use(express.json());
+
+morgan.token("body", (request) => {
+  return JSON.stringify(request.body);
+});
+
+app.use(
+  morgan(":method :url :status :res[content-length] - :response-time ms :body")
+);
 
 const date = new Date().toString();
 console.log(date);
@@ -29,16 +38,19 @@ let persons = [
   },
 ];
 
+// Display Text
 app.get("/info", (req, res) => {
   res.send(
     `<p>Phonebook has info for ${persons.length} people</p><p>${date}</p>`
   );
 });
 
+// List all
 app.get("/api/persons", (req, res) => {
   res.json(persons);
 });
 
+// List unique
 app.get("/api/persons/:id", (req, res) => {
   const id = Number(req.params.id);
   console.log(id);
@@ -52,6 +64,7 @@ app.get("/api/persons/:id", (req, res) => {
   }
 });
 
+// Delete unique
 app.delete("/api/persons/:id", (req, res) => {
   const id = Number(req.params.id);
   persons = persons.filter((person) => person.id !== id);
@@ -59,6 +72,7 @@ app.delete("/api/persons/:id", (req, res) => {
   res.status(204).end();
 });
 
+// Add one
 app.post("/api/persons", (req, res) => {
   const body = req.body;
 
