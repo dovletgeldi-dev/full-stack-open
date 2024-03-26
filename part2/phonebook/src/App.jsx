@@ -38,16 +38,25 @@ const App = () => {
   };
 
   const addPerson = (newPerson) => {
-    personService.create(newPerson).then((createPerson) => {
-      setPersons(persons.concat(createPerson));
-      setMessage(`Added ${newName}`);
-      setIsSuccess(true);
-      setTimeout(() => {
-        setMessage(null);
-      }, 3000);
-      setNewName("");
-      setNewNumber("");
-    });
+    personService
+      .create(newPerson)
+      .then((createPerson) => {
+        setPersons(persons.concat(createPerson));
+        setMessage(`Added ${newName}`);
+        setIsSuccess(true);
+        setTimeout(() => {
+          setMessage(null);
+        }, 3000);
+        setNewName("");
+        setNewNumber("");
+      })
+      .catch((error) => {
+        console.log(error.response.data.error);
+        setMessage(error.response.data.error);
+        setTimeout(() => {
+          setMessage(null);
+        }, 5000);
+      });
   };
 
   const handleSubmit = (event) => {
