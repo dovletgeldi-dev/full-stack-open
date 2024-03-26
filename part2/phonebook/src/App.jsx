@@ -52,6 +52,7 @@ const App = () => {
       })
       .catch((error) => {
         console.log(error.response.data.error);
+        setIsSuccess(false);
         setMessage(error.response.data.error);
         setTimeout(() => {
           setMessage(null);
