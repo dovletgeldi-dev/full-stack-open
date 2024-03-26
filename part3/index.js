@@ -11,7 +11,7 @@ morgan.token("body", (request) => {
 });
 app.use(morgan("tiny"));
 app.use(express.json());
-app.use(express.static("dist"));
+app.use(express.static(path.join(__dirname, "dist")));
 
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
