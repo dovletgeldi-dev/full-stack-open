@@ -226,6 +226,8 @@ describe("when there is initially one user in db", () => {
     const usersAtEnd = await helper.usersInDb();
     assert(result.body.error.includes("expected `username` to be unique"));
 
+    console.log(usersAtEnd);
+
     assert.strictEqual(usersAtEnd.length, usersAtStart.length);
   });
 });
