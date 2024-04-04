@@ -3,10 +3,11 @@ require("express-async-errors");
 const app = express();
 const cors = require("cors");
 const morgan = require("morgan");
+const config = require("./utils/config");
 const middleware = require("./utils/middleware");
 const mongoose = require("mongoose");
 const blogsRouter = require("./controllers/blogs");
-const config = require("./utils/config");
+const userRouter = require("./controllers/users");
 
 const mongoUrl = config.MONGODB_URI;
 
@@ -33,6 +34,8 @@ app.use(
 );
 
 app.use("/api/blogs", blogsRouter);
+
+app.use("/api/users", userRouter);
 
 app.use(middleware.unknownEndpoint);
 
