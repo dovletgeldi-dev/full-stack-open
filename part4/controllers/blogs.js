@@ -20,14 +20,23 @@ blogsRouter.get("/:id", async (request, response) => {
 blogsRouter.post("/", async (request, response) => {
   const body = request.body;
 
-  const user = await User.findById(body.userId);
+  const users = await User.find({});
+
+  // Check if there are any users
+  if (users.length === 0) {
+    return response.status(400).json({ error: "No users found" });
+  }
+
+  // Select a random user
+  const randomIndex = Math.floor(Math.random() * users.length);
+  const randomUser = users[randomIndex];
 
   const blog = new Blog({
     title: body.title,
     author: body.author,
     url: body.url,
     likes: body.likes,
-    user: user.id,
+    user: randomUser.id,
   });
 
   if (!blog.title || !blog.url) {
@@ -35,8 +44,10 @@ blogsRouter.post("/", async (request, response) => {
   }
 
   const savedBlog = await blog.save();
-  user.blogs = user.blogs.concat(savedBlog._id);
-  await user.save();
+
+  // Update the user's blogs array with the new blog's ID
+  randomUser.blogs = randomUser.blogs.concat(savedBlog._id);
+  await randomUser.save();
 
   response.status(201).json(savedBlog);
 });
