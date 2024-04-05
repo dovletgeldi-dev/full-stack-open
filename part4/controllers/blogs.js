@@ -22,16 +22,10 @@ blogsRouter.get("/:id", async (request, response) => {
 blogsRouter.post("/", async (request, response) => {
   const body = request.body;
 
-  const decodedToken = jwt.verify(request.token, config.SECRET);
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: "token invalid" });
-  }
+  const user = request.user;
 
-  const users = await User.findById(decodedToken.id);
-
-  // Check if there are any users
-  if (users.length === 0) {
-    return response.status(400).json({ error: "No users found" });
+  if (!user) {
+    return response.status(401).json({ error: "token missing or invalid" });
   }
 
   const blog = new Blog({
@@ -39,7 +33,7 @@ blogsRouter.post("/", async (request, response) => {
     author: body.author,
     url: body.url,
     likes: body.likes,
-    user: users.id,
+    user: user.id,
   });
 
   if (!blog.title || !blog.url) {
@@ -49,25 +43,24 @@ blogsRouter.post("/", async (request, response) => {
   const savedBlog = await blog.save();
 
   // Update the user's blogs array with the new blog's ID
-  users.blogs = users.blogs.concat(savedBlog._id);
-  await users.save();
+  user.blogs = user.blogs.concat(savedBlog._id);
+  await user.save();
 
   response.status(201).json(savedBlog);
 });
 
 blogsRouter.delete("/:id", async (request, response) => {
-  const blog = await Blog.findById(request.params.id);
+  const user = request.user;
 
-  const decodedToken = jwt.verify(request.token, config.SECRET);
-  const users = decodedToken.id;
-
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: "token invalid" });
+  if (!user) {
+    return response.status(401).json({ error: "token missing or invalid" });
   }
 
-  if (blog.user.toString() !== users.toString()) {
+  const blog = await Blog.findById(request.params.id);
+
+  if (blog.user.toString() !== request.user.id.toString()) {
     return response.status(401).json({
-      error: "unauthorized. blogs can only be deleted by the user who added it",
+      error: "unauthorized! blogs can only be deleted by the user who added it",
     });
   }
 

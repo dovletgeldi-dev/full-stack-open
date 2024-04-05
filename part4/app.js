@@ -35,6 +35,7 @@ app.use(
 );
 
 app.use(middleware.tokenExtractor);
+app.use(middleware.userExtractor);
 
 app.use("/api/blogs", blogsRouter);
 
