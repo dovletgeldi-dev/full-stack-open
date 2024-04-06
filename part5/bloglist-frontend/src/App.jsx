@@ -90,6 +90,21 @@ const App = () => {
       });
   };
 
+  const handleAddLike = (blogToAddLike) => {
+    const newUpdatedLikeBlog = {
+      ...blogToAddLike,
+      likes: ++blogToAddLike.likes,
+    };
+
+    blogService
+      .update(blogToAddLike.id, newUpdatedLikeBlog)
+      .then((response) => {
+        setBlogs(
+          blogs.map((blog) => (blog.id !== blogToAddLike.id ? blog : response))
+        );
+      });
+  };
+
   return (
     <div>
       <h1>Blog App</h1>
@@ -117,7 +132,7 @@ const App = () => {
 
           <h2>blogs</h2>
 
-          <BlogList blogs={blogs} />
+          <BlogList blogs={blogs} handleClick={handleAddLike} />
         </div>
       )}
     </div>

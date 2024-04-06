@@ -1,8 +1,6 @@
 import React from "react";
 
 function Notifications({ message, isSuccess }) {
-  console.log(message, isSuccess);
-
   if (message === null) {
     return null;
   }
