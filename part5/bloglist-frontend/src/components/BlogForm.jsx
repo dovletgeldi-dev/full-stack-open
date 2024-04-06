@@ -1,25 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 
-function BlogForm({
-  handleSubmit,
-  handleTitleChange,
-  handleAuthorChange,
-  handleUrlChange,
-  handleLikesChange,
-  newTitle,
-  newAuthor,
-  newUrl,
-  newLikes,
-}) {
+function BlogForm({ createBlog, user }) {
+  const [newTitle, setNewTitle] = useState("");
+  const [newAuthor, setNewAuthor] = useState("");
+  const [newUrl, setNewUrl] = useState("");
+  const [newLikes, setNewLikes] = useState("");
+
+  const addBlog = (event) => {
+    event.preventDefault();
+
+    console.log(newTitle, newAuthor, newUrl, newLikes, user);
+
+    createBlog({
+      title: newTitle,
+      author: newAuthor,
+      url: newUrl,
+      likes: newLikes,
+      user: user.id,
+    });
+
+    setNewTitle("");
+    setNewAuthor("");
+    setNewUrl("");
+    setNewLikes("");
+  };
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={addBlog}>
       <div>
         title:
         <input
           type="text"
           name="Title"
           value={newTitle}
-          onChange={handleTitleChange}
+          onChange={({ target }) => setNewTitle(target.value)}
           required
         />
       </div>
@@ -29,7 +42,7 @@ function BlogForm({
           type="text"
           name="Author"
           value={newAuthor}
-          onChange={handleAuthorChange}
+          onChange={({ target }) => setNewAuthor(target.value)}
           required
         />
       </div>
@@ -39,7 +52,7 @@ function BlogForm({
           type="text"
           name="URL"
           value={newUrl}
-          onChange={handleUrlChange}
+          onChange={({ target }) => setNewUrl(target.value)}
           required
         />
       </div>
@@ -49,7 +62,7 @@ function BlogForm({
           type="number"
           name="Likes"
           value={newLikes}
-          onChange={handleLikesChange}
+          onChange={({ target }) => setNewLikes(target.value)}
         />
       </div>
       <button type="submit">create</button>

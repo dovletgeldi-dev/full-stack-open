@@ -12,11 +12,6 @@ import BlogList from "./components/BlogList";
 const App = () => {
   const [blogs, setBlogs] = useState([]);
 
-  const [newTitle, setNewTitle] = useState("");
-  const [newAuthor, setNewAuthor] = useState("");
-  const [newUrl, setNewUrl] = useState("");
-  const [newLikes, setNewLikes] = useState("");
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
@@ -77,31 +72,15 @@ const App = () => {
     }, 3000);
   };
 
-  const handleNewBlog = async (event) => {
-    event.preventDefault();
-
-    console.log(newTitle, newAuthor, newUrl, newLikes, user);
-
-    const newBlog = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl,
-      likes: newLikes,
-      user: user.id,
-    };
-
+  const handleNewBlog = (blogObject) => {
     blogFormRef.current.toggleVisibility();
 
     blogService
-      .create(newBlog)
+      .create(blogObject)
       .then((createBlog) => {
         setBlogs(blogs.concat(createBlog));
         setIsSuccess(true);
         setMessage(`a new blog ${newTitle} by ${newAuthor} added`);
-        setNewTitle("");
-        setNewAuthor("");
-        setNewUrl("");
-        setNewLikes("");
         setTimeout(() => {
           setMessage(null);
         }, 3000);
@@ -133,17 +112,7 @@ const App = () => {
           <h2>create new blog</h2>
 
           <Togglable buttonLabel="new blog" ref={blogFormRef}>
-            <BlogForm
-              handleSubmit={handleNewBlog}
-              handleTitleChange={({ target }) => setNewTitle(target.value)}
-              handleAuthorChange={({ target }) => setNewAuthor(target.value)}
-              handleUrlChange={({ target }) => setNewUrl(target.value)}
-              handleLikesChange={({ target }) => setNewLikes(target.value)}
-              newTitle={newTitle}
-              newAuthor={newAuthor}
-              newUrl={newUrl}
-              newLikes={newLikes}
-            />
+            <BlogForm createBlog={handleNewBlog} user={user} />
           </Togglable>
 
           <h2>blogs</h2>
