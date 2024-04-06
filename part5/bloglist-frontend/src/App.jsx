@@ -82,7 +82,9 @@ const App = () => {
       .then((createBlog) => {
         setBlogs(blogs.concat(createBlog));
         setIsSuccess(true);
-        setMessage(`a new blog ${newTitle} by ${newAuthor} added`);
+        setMessage(
+          `a new blog ${createBlog.title} by ${createBlog.title} added`
+        );
         setTimeout(() => {
           setMessage(null);
         }, 3000);
@@ -105,6 +107,34 @@ const App = () => {
           blogs.map((blog) => (blog.id !== blogToAddLike.id ? blog : response))
         );
       });
+  };
+
+  const handleDeleteBlog = (blogToDelete) => {
+    console.log(blogToDelete.id, blogToDelete.user.id, user.id);
+
+    if (
+      !window.confirm(
+        `Remove blog ${blogToDelete.title} by ${blogToDelete.author} ?`
+      )
+    ) {
+      return null;
+    } else {
+      blogService
+        .remove(blogToDelete)
+        .then(() => {
+          setIsSuccess(true);
+          setMessage(
+            `Successfully removed ${blogToDelete.title} by ${blogToDelete.author} from blogs`
+          );
+          setTimeout(() => {
+            setMessage(null);
+          }, 3000);
+          setBlogs(blogs.filter((blog) => blog.id !== blogToDelete.id));
+        })
+        .catch((exception) => {
+          console.log(exception);
+        });
+    }
   };
 
   return (
@@ -134,7 +164,11 @@ const App = () => {
 
           <h2>blogs</h2>
 
-          <BlogList blogs={blogs} handleClick={handleAddLike} />
+          <BlogList
+            blogs={blogs}
+            handleLike={handleAddLike}
+            handleDelete={handleDeleteBlog}
+          />
         </div>
       )}
     </div>
