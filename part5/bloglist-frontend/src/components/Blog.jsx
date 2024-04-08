@@ -11,6 +11,7 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
   return (
     <div
       style={{ border: "2px solid black", margin: "1rem 0", padding: "1rem" }}
+      className="blog"
     >
       {blog.title} {blog.author}{" "}
       <button onClick={toggleVisibility}>{visible ? "hide" : "view"}</button>
