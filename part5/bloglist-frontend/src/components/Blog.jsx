@@ -13,12 +13,21 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
       style={{ border: "2px solid black", margin: "1rem 0", padding: "1rem" }}
       className="blog"
     >
-      {blog.title} {blog.author}{" "}
-      <button onClick={toggleVisibility}>{visible ? "hide" : "view"}</button>
       {!visible ? (
-        <></>
+        <>
+          {blog.title} {blog.author}{" "}
+          <button onClick={toggleVisibility}>
+            {visible ? "hide" : "view"}
+          </button>
+        </>
       ) : (
         <div>
+          <div>
+            {blog.title} {blog.author}{" "}
+            <button onClick={toggleVisibility}>
+              {visible ? "hide" : "view"}
+            </button>
+          </div>
           <p>{blog.url}</p>
           <p>
             {blog.likes}
