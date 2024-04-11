@@ -16,7 +16,7 @@ function BlogForm({ createBlog, user }) {
       title: newTitle,
       author: newAuthor,
       url: newUrl,
-      likes: newLikes,
+      likes: newLikes || 0,
       user: userId,
     });
 
@@ -35,6 +35,7 @@ function BlogForm({ createBlog, user }) {
           value={newTitle}
           onChange={({ target }) => setNewTitle(target.value)}
           required
+          placeholder="title"
         />
       </div>
       <div>
@@ -45,6 +46,7 @@ function BlogForm({ createBlog, user }) {
           value={newAuthor}
           onChange={({ target }) => setNewAuthor(target.value)}
           required
+          placeholder="author"
         />
       </div>
       <div>
@@ -55,6 +57,7 @@ function BlogForm({ createBlog, user }) {
           value={newUrl}
           onChange={({ target }) => setNewUrl(target.value)}
           required
+          placeholder="url"
         />
       </div>
       <div>
@@ -64,6 +67,7 @@ function BlogForm({ createBlog, user }) {
           name="Likes"
           value={newLikes}
           onChange={({ target }) => setNewLikes(target.value)}
+          placeholder="likes"
         />
       </div>
       <button type="submit">create</button>
