@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { text } from "stream/consumers";
-import { loginWith } from "./helper";
+import { createNote, loginWith } from "./helper";
 
 test.describe("Blog app", () => {
   test.beforeEach(async ({ page, request }) => {
@@ -75,6 +75,24 @@ test.describe("Blog app", () => {
 
       await expect(page.getByText("https://react.dev/")).toBeVisible();
       await expect(page.getByText("8")).toBeVisible();
+    });
+
+    test("blog can be edited", async ({ page }) => {
+      await createNote(
+        page,
+        "Angular",
+        "Google Dev",
+        "https://angular.com/",
+        "1"
+      );
+
+      await page.getByRole("button", { name: "view" }).click();
+
+      await expect(page.getByText("1")).toBeVisible();
+
+      await page.getByRole("button", { name: "like" }).click();
+
+      await expect(page.getByText("2")).toBeVisible();
     });
   });
 });
