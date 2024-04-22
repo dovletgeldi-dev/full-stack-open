@@ -63,7 +63,7 @@ function BlogForm({ createBlog, user }) {
       <div>
         likes:
         <input
-          type="number"
+          type="text"
           name="Likes"
           value={newLikes}
           onChange={({ target }) => setNewLikes(target.value)}

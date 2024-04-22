@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { text } from "stream/consumers";
+import { loginWith } from "./helper";
 
 test.describe("Blog app", () => {
   test.beforeEach(async ({ page, request }) => {
@@ -46,5 +47,34 @@ test.describe("Blog app", () => {
 
     await expect(page.getByText("Dovlet Myratgeldiyev logged-in")).toBeHidden();
     await expect(page.getByText("Wrong username or password")).toBeVisible();
+  });
+
+  test.describe("When logged in", () => {
+    test.beforeEach(async ({ page }) => {
+      await loginWith(page, "dovlet", "dovletgeldi");
+    });
+
+    test("a new blog can be created", async ({ page }) => {
+      await page.getByRole("button", { name: "new blog" }).click();
+
+      const textboxes = await page.getByRole("textbox").all();
+
+      await textboxes[0].fill("Vue 101");
+      await textboxes[1].fill("Dan Abramov");
+      await textboxes[2].fill("https://react.dev/");
+      await textboxes[3].fill("8");
+
+      await page.getByRole("button", { name: "create" }).click();
+
+      await expect(page.getByTestId("titleOutput")).toHaveText(/Vue 101/);
+      await expect(page.getByTestId("authorOutput")).toHaveText(/Dan Abramov/);
+      await expect(page.getByText("https://react.dev/")).toBeHidden();
+      await expect(page.getByText("8")).toBeHidden();
+
+      await page.getByRole("button", { name: "view" }).click();
+
+      await expect(page.getByText("https://react.dev/")).toBeVisible();
+      await expect(page.getByText("8")).toBeVisible();
+    });
   });
 });

@@ -14,16 +14,18 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
       className="blog"
     >
       {!visible ? (
-        <>
-          {blog.title} {blog.author}{" "}
+        <div>
+          <span data-testid="titleOutput">{blog.title}</span>{" "}
+          <span data-testid="authorOutput">{blog.author}</span>
           <button onClick={toggleVisibility}>
             {visible ? "hide" : "view"}
           </button>
-        </>
+        </div>
       ) : (
         <div>
           <div>
-            {blog.title} {blog.author}{" "}
+            <span data-testid="titleOutput">{blog.title}</span>{" "}
+            <span data-testid="authorOutput">{blog.author}</span>
             <button onClick={toggleVisibility}>
               {visible ? "hide" : "view"}
             </button>
