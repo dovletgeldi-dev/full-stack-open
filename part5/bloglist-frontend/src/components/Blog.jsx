@@ -1,12 +1,13 @@
 import { useState } from "react";
 
-const Blog = ({ blog, handleLike, handleDelete }) => {
+const Blog = ({ currentUser, blog, handleLike, handleDelete }) => {
   const [visible, setVisible] = useState(false);
-  const [user, setUser] = useState(blog.user.name);
 
   const toggleVisibility = () => {
     setVisible(!visible);
   };
+
+  const showDelete = currentUser.name === blog.user.name ? true : false;
 
   return (
     <div
@@ -24,8 +25,7 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
       ) : (
         <div>
           <div>
-            <span data-testid="titleOutput">{blog.title}</span>{" "}
-            <span data-testid="authorOutput">{blog.author}</span>
+            <span>{blog.title}</span> <span>{blog.author}</span>
             <button onClick={toggleVisibility}>
               {visible ? "hide" : "view"}
             </button>
@@ -37,20 +37,22 @@ const Blog = ({ blog, handleLike, handleDelete }) => {
               like
             </button>
           </p>
-          <p>{user}</p>
-          <button
-            style={{
-              display: "block",
-              border: "0",
-              borderRadius: "5px",
-              padding: "0.5rem",
-              backgroundColor: "red",
-              color: "white",
-            }}
-            onClick={() => handleDelete(blog)}
-          >
-            remove
-          </button>
+          <p>{blog.user.name}</p>
+          {showDelete && (
+            <button
+              style={{
+                display: "block",
+                border: "0",
+                borderRadius: "5px",
+                padding: "0.5rem",
+                backgroundColor: "red",
+                color: "white",
+              }}
+              onClick={() => handleDelete(blog)}
+            >
+              remove
+            </button>
+          )}
         </div>
       )}
     </div>

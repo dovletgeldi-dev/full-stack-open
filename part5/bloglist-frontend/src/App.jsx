@@ -19,13 +19,15 @@ const App = () => {
   const [message, setMessage] = useState(null);
   const [isSuccess, setIsSuccess] = useState(null);
 
+  const [refreshBlog, setRefreshBlog] = useState(false);
+
   const blogFormRef = useRef();
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
 
     console.log(blogs);
-  }, []);
+  }, [refreshBlog]);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogUser");
@@ -67,11 +69,6 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.clear();
     setUser(null);
-    setMessage("Logged out successfully!");
-    setIsSuccess(true);
-    setTimeout(() => {
-      setMessage(null);
-    }, 3000);
   };
 
   const handleNewBlog = (blogObject) => {
@@ -85,6 +82,8 @@ const App = () => {
         setMessage(
           `a new blog ${createBlog.title} by ${createBlog.title} added`
         );
+        setRefreshBlog(!refreshBlog);
+
         setTimeout(() => {
           setMessage(null);
         }, 3000);
@@ -132,7 +131,14 @@ const App = () => {
           setBlogs(blogs.filter((blog) => blog.id !== blogToDelete.id));
         })
         .catch((exception) => {
-          console.log(exception);
+          console.log(exception.response.data.error);
+          setIsSuccess(false);
+          setMessage(
+            `unauthorized! blogs can only be deleted by the user who added it`
+          );
+          setTimeout(() => {
+            setMessage(null);
+          }, 3000);
         });
     }
   };
@@ -165,6 +171,7 @@ const App = () => {
           <h2>blogs</h2>
 
           <BlogList
+            currentUser={user}
             blogs={blogs}
             handleLike={handleAddLike}
             handleDelete={handleDeleteBlog}
