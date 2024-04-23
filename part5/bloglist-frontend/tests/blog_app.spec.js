@@ -191,5 +191,36 @@ test.describe("Blog app", () => {
 
       await expect(page.getByText("remove")).toBeVisible();
     });
+
+    test("blogs are arranged by in order of most likes", async ({ page }) => {
+      await createNote(
+        page,
+        "Vue 101",
+        "Dan Abramov",
+        "https://react.dev/",
+        "8"
+      );
+
+      await page.waitForSelector(
+        '[data-testid="titleOutput"]:has-text("Vue 101")'
+      );
+
+      await createNote(
+        page,
+        "React Dev",
+        "Dan Abramov",
+        "https://react.dev/",
+        "12"
+      );
+
+      await page.waitForSelector(
+        '[data-testid="titleOutput"]:has-text("React Dev")'
+      );
+
+      const firstMostLikes = page.getByRole("button", { name: "view" }).first();
+      await firstMostLikes.click();
+
+      await expect(page.getByTestId("likes")).toHaveText(/12/);
+    });
   });
 });
