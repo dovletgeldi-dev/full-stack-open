@@ -3,8 +3,6 @@ import anecdoteService from "../services/anecdotes";
 
 /* eslint-disable no-case-declarations */
 
-const getId = () => (100000 * Math.random()).toFixed(0);
-
 const anecdotesSlice = createSlice({
   name: "anecdotes",
   initialState: [],
@@ -18,14 +16,6 @@ const anecdotesSlice = createSlice({
       });
     },
     anecdoteAdded(state, action) {
-      const content = action.payload;
-      state.push({
-        id: getId(),
-        content,
-        votes: 0,
-      });
-    },
-    appendAnecdotes(state, action) {
       state.push(action.payload);
     },
     setAnecdotes(state, action) {
@@ -47,7 +37,7 @@ export const initialAnecdotes = () => {
 export const createAnecdote = (content) => {
   return async (dispatch) => {
     const newAnecdote = await anecdoteService.createNew(content);
-    dispatch(anecdoteAdded(newAnecdote.content));
+    dispatch(anecdoteAdded(newAnecdote));
   };
 };
 
