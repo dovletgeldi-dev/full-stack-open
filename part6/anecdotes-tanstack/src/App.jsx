@@ -3,10 +3,19 @@ import AnecdoteForm from "./components/AnecdoteForm";
 import Notification from "./components/Notification";
 import axios from "axios";
 import { getAnecdotes, voteAnecdote } from "./requests";
+import { useContext } from "react";
+import NotificationContext from "./context/NotificationContext";
 
 const App = () => {
+  const [notification, dispatch] = useContext(NotificationContext);
+
   const handleVote = (anecdote) => {
     console.log("vote", anecdote.id);
+
+    dispatch({ type: "SHOW", action: `you voted '${anecdote.content}'` });
+    setTimeout(() => {
+      dispatch({ type: "CLEAR" });
+    }, 5000);
 
     updateAnecdoteMutation.mutate({ ...anecdote, votes: anecdote.votes + 1 });
   };
