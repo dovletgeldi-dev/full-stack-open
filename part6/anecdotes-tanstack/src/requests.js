@@ -1,4 +1,14 @@
 import axios from "axios";
 
-export const getAnecdotes = () =>
-  axios.get("http://localhost:3001/anecdotes").then((res) => res.data);
+const baseUrl = "http://localhost:3001/anecdotes";
+
+export const getAnecdotes = () => axios.get(baseUrl).then((res) => res.data);
+
+export const createAnecdote = (newAnecdote) =>
+  axios.post(baseUrl, newAnecdote).then((res) => res.data);
+
+export const voteAnecdote = async (votedAnecdote) => {
+  const res = await axios
+    .put(`${baseUrl}/${votedAnecdote.id}`, votedAnecdote)
+    .then((res) => res.data);
+};

@@ -1,12 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import AnecdoteForm from "./components/AnecdoteForm";
 import Notification from "./components/Notification";
 import axios from "axios";
-import { getAnecdotes } from "./requests";
+import { getAnecdotes, voteAnecdote } from "./requests";
 
 const App = () => {
   const handleVote = (anecdote) => {
-    console.log("vote");
+    console.log("vote", anecdote.id);
+
+    updateAnecdoteMutation.mutate({ ...anecdote, votes: anecdote.votes + 1 });
   };
 
   const result = useQuery({
@@ -15,6 +17,15 @@ const App = () => {
   });
 
   console.log(JSON.parse(JSON.stringify(result)));
+
+  const queryClient = useQueryClient();
+
+  const updateAnecdoteMutation = useMutation({
+    mutationFn: voteAnecdote,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["anecdotes"] });
+    },
+  });
 
   if (result.isLoading) {
     return <div>loading data...</div>;
