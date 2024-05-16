@@ -1,4 +1,13 @@
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable react/prop-types */
 import { useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  useParams,
+} from "react-router-dom";
 
 const Menu = () => {
   const padding = {
@@ -6,15 +15,15 @@ const Menu = () => {
   };
   return (
     <div>
-      <a href="#" style={padding}>
+      <Link to="/" style={padding}>
         anecdotes
-      </a>
-      <a href="#" style={padding}>
+      </Link>
+      <Link to="/create" style={padding}>
         create new
-      </a>
-      <a href="#" style={padding}>
+      </Link>
+      <Link to="/about" style={padding}>
         about
-      </a>
+      </Link>
     </div>
   );
 };
@@ -24,11 +33,36 @@ const AnecdoteList = ({ anecdotes }) => (
     <h2>Anecdotes</h2>
     <ul>
       {anecdotes.map((anecdote) => (
-        <li key={anecdote.id}>{anecdote.content}</li>
+        <li key={anecdote.id}>
+          <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+        </li>
       ))}
     </ul>
   </div>
 );
+
+const Anecdote = ({ anecdotes }) => {
+  const id = useParams().id;
+  const anecdote = anecdotes.find((a) => a.id === Number(id));
+  return (
+    <div>
+      <h2>
+        {anecdote.content} by {anecdote.author}
+      </h2>
+      <div>
+        has {anecdote.votes} {anecdote.votes === 1 ? "vote" : "votes"}
+      </div>
+
+      <br />
+
+      <div>
+        for more info see <a href={anecdote.info}>{anecdote.info}</a>
+      </div>
+
+      <br />
+    </div>
+  );
+};
 
 const About = () => (
   <div>
@@ -151,14 +185,22 @@ const App = () => {
   };
 
   return (
-    <div>
+    <Router>
       <h1>Software anecdotes</h1>
       <Menu />
-      <AnecdoteList anecdotes={anecdotes} />
-      <About />
-      <CreateNew addNew={addNew} />
+
+      <Routes>
+        <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
+        <Route
+          path="/anecdotes/:id"
+          element={<Anecdote anecdotes={anecdotes} />}
+        />
+        <Route path="/create" element={<CreateNew addNew={addNew} />} />
+        <Route path="/about" element={<About />} />
+      </Routes>
+
       <Footer />
-    </div>
+    </Router>
   );
 };
 
