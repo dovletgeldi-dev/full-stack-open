@@ -7,6 +7,7 @@ import {
   Route,
   Link,
   useParams,
+  useNavigate,
 } from "react-router-dom";
 
 const Menu = () => {
@@ -101,6 +102,7 @@ const CreateNew = (props) => {
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState("");
   const [info, setInfo] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -110,6 +112,7 @@ const CreateNew = (props) => {
       info,
       votes: 0,
     });
+    navigate("/");
   };
 
   return (
@@ -142,6 +145,8 @@ const CreateNew = (props) => {
         </div>
         <button>create</button>
       </form>
+
+      <br />
     </div>
   );
 };
@@ -169,6 +174,10 @@ const App = () => {
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000);
     setAnecdotes(anecdotes.concat(anecdote));
+    setNotification(anecdote.content);
+    setTimeout(() => {
+      setNotification("");
+    }, 5000);
   };
 
   const anecdoteById = (id) => anecdotes.find((a) => a.id === id);
@@ -188,6 +197,13 @@ const App = () => {
     <Router>
       <h1>Software anecdotes</h1>
       <Menu />
+
+      {notification === "" ? null : (
+        <div>
+          <br />
+          <div>a new anecdote {notification} created!</div>
+        </div>
+      )}
 
       <Routes>
         <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
