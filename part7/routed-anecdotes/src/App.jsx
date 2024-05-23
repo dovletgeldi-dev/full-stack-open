@@ -116,6 +116,12 @@ const CreateNew = ({ addNew }) => {
     navigate("/");
   };
 
+  const handleReset = () => {
+    content.onReset();
+    author.onReset();
+    info.onReset();
+  };
+
   return (
     <div>
       <h2>create a new anecdote</h2>
@@ -147,7 +153,10 @@ const CreateNew = ({ addNew }) => {
             onChange={info.onChange}
           />
         </div>
-        <button>create</button>
+        <button type="submit">create</button>
+        <button type="reset" onClick={handleReset}>
+          reset
+        </button>
       </form>
 
       <br />
