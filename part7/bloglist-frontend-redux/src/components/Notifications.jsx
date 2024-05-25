@@ -1,13 +1,19 @@
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 
-function Notifications({ message, isSuccess }) {
-  if (message === null) {
+function Notifications({ isSuccess }) {
+  const notification = useSelector((state) => state.notifications);
+
+  console.log(notification);
+
+  if (notification === null) {
     return null;
   }
 
   return (
     <div
       style={{
+        display: notification.length === 0 ? "none" : "block",
         padding: "1rem",
         margin: "1rem 0",
         borderRadius: "10px",
@@ -16,7 +22,7 @@ function Notifications({ message, isSuccess }) {
         backgroundColor: "lightgray",
       }}
     >
-      {message}
+      {notification}
     </div>
   );
 }

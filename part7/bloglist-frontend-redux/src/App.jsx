@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import Notifications from "./components/Notifications";
@@ -8,6 +7,8 @@ import Togglable from "./components/Togglable";
 import LoggedUser from "./components/LoggedUser";
 import BlogForm from "./components/BlogForm";
 import BlogList from "./components/BlogList";
+import { useDispatch } from "react-redux";
+import { setNotification } from "./redux/notificationSlice";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -16,18 +17,17 @@ const App = () => {
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
 
-  const [message, setMessage] = useState(null);
   const [isSuccess, setIsSuccess] = useState(null);
 
-  const [refreshBlog, setRefreshBlog] = useState(false);
-
   const blogFormRef = useRef();
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
 
     console.log(blogs);
-  }, [refreshBlog]);
+  }, []);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogUser");
@@ -49,20 +49,14 @@ const App = () => {
       window.localStorage.setItem("loggedBlogUser", JSON.stringify(user));
       blogService.setToken(user.token);
       setUser(user);
-      setMessage("Logged in successfully!");
+      dispatch(setNotification("Logged in successfully!", 3000));
       setIsSuccess(true);
       setUsername("");
       setPassword("");
-      setTimeout(() => {
-        setMessage(null);
-      }, 3000);
     } catch (exception) {
       console.log(exception);
       setIsSuccess(false);
-      setMessage("Wrong username or password");
-      setTimeout(() => {
-        setMessage(null);
-      }, 3000);
+      dispatch(setNotification("Wrong username or password", 3000));
     }
   };
 
@@ -79,14 +73,12 @@ const App = () => {
       .then((createBlog) => {
         setBlogs(blogs.concat(createBlog));
         setIsSuccess(true);
-        setMessage(
-          `a new blog ${createBlog.title} by ${createBlog.title} added`
+        dispatch(
+          setNotification(
+            `a new blog ${createBlog.title} by ${createBlog.title} added`,
+            3000
+          )
         );
-        setRefreshBlog(!refreshBlog);
-
-        setTimeout(() => {
-          setMessage(null);
-        }, 3000);
       })
       .catch((exception) => {
         console.log(exception);
@@ -122,23 +114,23 @@ const App = () => {
         .remove(blogToDelete)
         .then(() => {
           setIsSuccess(true);
-          setMessage(
-            `Successfully removed ${blogToDelete.title} by ${blogToDelete.author} from blogs`
+          dispatch(
+            setNotification(
+              `Successfully removed ${blogToDelete.title} by ${blogToDelete.author} from blogs`,
+              3000
+            )
           );
-          setTimeout(() => {
-            setMessage(null);
-          }, 3000);
           setBlogs(blogs.filter((blog) => blog.id !== blogToDelete.id));
         })
         .catch((exception) => {
           console.log(exception.response.data.error);
           setIsSuccess(false);
-          setMessage(
-            `unauthorized! blogs can only be deleted by the user who added it`
+          dispatch(
+            setNotification(
+              `unauthorized! blogs can only be deleted by the user who added it`,
+              3000
+            )
           );
-          setTimeout(() => {
-            setMessage(null);
-          }, 3000);
         });
     }
   };
@@ -146,7 +138,7 @@ const App = () => {
   return (
     <div>
       <h1>Blog App</h1>
-      <Notifications message={message} isSuccess={isSuccess} />
+      <Notifications isSuccess={isSuccess} />
 
       {user === null ? (
         <Togglable buttonLabel="login">
