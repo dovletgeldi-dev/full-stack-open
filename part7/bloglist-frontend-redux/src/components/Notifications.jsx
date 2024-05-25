@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useDebugValue } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { current } from "@reduxjs/toolkit";
 
 function Notifications({ isSuccess }) {
   const notification = useSelector((state) => state.notifications);
-
-  console.log(notification);
 
   if (notification === null) {
     return null;

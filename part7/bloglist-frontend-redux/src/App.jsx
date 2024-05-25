@@ -7,14 +7,18 @@ import Togglable from "./components/Togglable";
 import LoggedUser from "./components/LoggedUser";
 import BlogForm from "./components/BlogForm";
 import BlogList from "./components/BlogList";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setNotification } from "./redux/notificationSlice";
+import { createBlog, initialBlogs } from "./redux/blogSlice";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
+  const blogs = useSelector((state) => state.blogs);
+
+  console.log(blogs);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
   const [user, setUser] = useState(null);
 
   const [isSuccess, setIsSuccess] = useState(null);
@@ -24,10 +28,8 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
-
-    console.log(blogs);
-  }, []);
+    dispatch(initialBlogs());
+  }, [dispatch]);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogUser");
@@ -63,26 +65,6 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.clear();
     setUser(null);
-  };
-
-  const handleNewBlog = (blogObject) => {
-    blogFormRef.current.toggleVisibility();
-
-    blogService
-      .create(blogObject)
-      .then((createBlog) => {
-        setBlogs(blogs.concat(createBlog));
-        setIsSuccess(true);
-        dispatch(
-          setNotification(
-            `a new blog ${createBlog.title} by ${createBlog.title} added`,
-            3000
-          )
-        );
-      })
-      .catch((exception) => {
-        console.log(exception);
-      });
   };
 
   const handleAddLike = (blogToAddLike) => {
@@ -157,7 +139,7 @@ const App = () => {
           <h2>create new blog</h2>
 
           <Togglable buttonLabel="new blog" ref={blogFormRef}>
-            <BlogForm createBlog={handleNewBlog} user={user} />
+            <BlogForm user={user} />
           </Togglable>
 
           <h2>blogs</h2>

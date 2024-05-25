@@ -1,6 +1,10 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { createBlog } from "../redux/blogSlice";
 
-function BlogForm({ createBlog, user }) {
+function BlogForm({ user }) {
+  const dispatch = useDispatch();
+
   const [newTitle, setNewTitle] = useState("");
   const [newAuthor, setNewAuthor] = useState("");
   const [newUrl, setNewUrl] = useState("");
@@ -12,13 +16,23 @@ function BlogForm({ createBlog, user }) {
 
     console.log(newTitle, newAuthor, newUrl, newLikes, user);
 
-    createBlog({
+    const newBlog = {
       title: newTitle,
       author: newAuthor,
       url: newUrl,
       likes: newLikes || 0,
       user: userId,
-    });
+    };
+
+    dispatch(createBlog(newBlog));
+
+    dispatch(
+      setNotification(
+        `a new blog ${createBlog.title} by ${createBlog.title} added`,
+        3000,
+        true
+      )
+    );
 
     setNewTitle("");
     setNewAuthor("");
