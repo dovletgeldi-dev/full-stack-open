@@ -1,15 +1,36 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setNotification } from "../redux/notificationSlice";
+import { setTypeOfNotification } from "../redux/notificationTypeSlice";
+import { initialLogin, setLogin } from "../redux/loginSlice";
 
-function LoginForm({
-  handleSubmit,
-  handleUsernameChange,
-  handlePasswordChange,
-  username,
-  password,
-}) {
+function LoginForm() {
+  const user = useSelector((state) => state.login);
+
+  const dispatch = useDispatch();
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
+
+    dispatch(initialLogin({ username, password }));
+
+    try {
+      dispatch(setNotification("Logged in successfully!", 3000));
+      dispatch(setTypeOfNotification(true));
+      setUsername("");
+      setPassword("");
+    } catch (error) {
+      console.log(error);
+      dispatch(setTypeOfNotification(false));
+      dispatch(setNotification("Wrong username or password", 3000));
+    }
+  };
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleLogin}>
       <div>
         username:
         <input
@@ -17,7 +38,7 @@ function LoginForm({
           type="text"
           name="Username"
           value={username}
-          onChange={handleUsernameChange}
+          onChange={({ target }) => setUsername(target.value)}
           required
         />
       </div>
@@ -28,7 +49,7 @@ function LoginForm({
           type="text"
           name="Password"
           value={password}
-          onChange={handlePasswordChange}
+          onChange={({ target }) => setPassword(target.value)}
           required
         />
       </div>
@@ -36,13 +57,5 @@ function LoginForm({
     </form>
   );
 }
-
-LoginForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
-  handleUsernameChange: PropTypes.func.isRequired,
-  handlePasswordChange: PropTypes.func.isRequired,
-  username: PropTypes.string.isRequired,
-  password: PropTypes.string.isRequired,
-};
 
 export default LoginForm;

@@ -1,14 +1,15 @@
 import React from "react";
 import Blog from "./Blog";
 
-function BlogList({ currentUser, blogs }) {
+function BlogList({ user, blogs }) {
+  const sortedBlogs = [...blogs].sort(
+    (a, b) => Number(b.likes) - Number(a.likes)
+  );
   return (
     <div>
-      {blogs
-        .map((blog) => (
-          <Blog currentUser={currentUser} key={blog.id} blog={blog} />
-        ))
-        .sort((a, b) => b.likes - a.likes)}
+      {sortedBlogs.map((blog) => (
+        <Blog currentUser={user} key={blog.id} blog={blog} />
+      ))}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { deleteBlog, likeBlog } from "../redux/blogSlice";
+import { deleteBlog, initialBlogs, likeBlog } from "../redux/blogSlice";
 import { setNotification } from "../redux/notificationSlice";
 import { setTypeOfNotification } from "../redux/notificationTypeSlice";
 import { useDispatch } from "react-redux";
@@ -25,10 +25,11 @@ const Blog = ({ currentUser, blog }) => {
     dispatch(likeBlog(blogToAddLike.id, newUpdatedLikeBlog));
     dispatch(setTypeOfNotification(true));
     dispatch(setNotification(`you liked '${blogToAddLike.title}'`, 3000));
+    dispatch(initialBlogs());
   };
 
   const handleDeleteBlog = (blogToDelete) => {
-    console.log(blogToDelete.id, blogToDelete.user.id, currentUser);
+    console.log(blogToDelete.id, blogToDelete.user.id, currentUser.id);
 
     if (
       !window.confirm(
@@ -45,6 +46,7 @@ const Blog = ({ currentUser, blog }) => {
           3000
         )
       );
+      dispatch(initialBlogs());
     }
   };
 
