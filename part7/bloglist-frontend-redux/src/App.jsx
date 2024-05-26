@@ -10,6 +10,7 @@ import BlogList from "./components/BlogList";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotification } from "./redux/notificationSlice";
 import { createBlog, initialBlogs } from "./redux/blogSlice";
+import { setTypeOfNotification } from "./redux/notificationTypeSlice";
 
 const App = () => {
   const blogs = useSelector((state) => state.blogs);
@@ -21,15 +22,13 @@ const App = () => {
 
   const [user, setUser] = useState(null);
 
-  const [isSuccess, setIsSuccess] = useState(null);
-
   const blogFormRef = useRef();
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(initialBlogs());
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogUser");
@@ -52,12 +51,12 @@ const App = () => {
       blogService.setToken(user.token);
       setUser(user);
       dispatch(setNotification("Logged in successfully!", 3000));
-      setIsSuccess(true);
+      dispatch(setTypeOfNotification(true));
       setUsername("");
       setPassword("");
     } catch (exception) {
       console.log(exception);
-      setIsSuccess(false);
+      dispatch(setTypeOfNotification(false));
       dispatch(setNotification("Wrong username or password", 3000));
     }
   };
@@ -95,7 +94,7 @@ const App = () => {
       blogService
         .remove(blogToDelete)
         .then(() => {
-          setIsSuccess(true);
+          dispatch(setTypeOfNotification(true));
           dispatch(
             setNotification(
               `Successfully removed ${blogToDelete.title} by ${blogToDelete.author} from blogs`,
@@ -104,15 +103,8 @@ const App = () => {
           );
           setBlogs(blogs.filter((blog) => blog.id !== blogToDelete.id));
         })
-        .catch((exception) => {
-          console.log(exception.response.data.error);
-          setIsSuccess(false);
-          dispatch(
-            setNotification(
-              `unauthorized! blogs can only be deleted by the user who added it`,
-              3000
-            )
-          );
+        .catch((error) => {
+          console.log(error);
         });
     }
   };
@@ -120,7 +112,7 @@ const App = () => {
   return (
     <div>
       <h1>Blog App</h1>
-      <Notifications isSuccess={isSuccess} />
+      <Notifications />
 
       {user === null ? (
         <Togglable buttonLabel="login">

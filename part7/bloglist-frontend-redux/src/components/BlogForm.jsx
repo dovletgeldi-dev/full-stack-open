@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createBlog } from "../redux/blogSlice";
+import { setNotification } from "../redux/notificationSlice";
+import { setTypeOfNotification } from "../redux/notificationTypeSlice";
 
 function BlogForm({ user }) {
   const dispatch = useDispatch();
@@ -28,11 +30,13 @@ function BlogForm({ user }) {
 
     dispatch(
       setNotification(
-        `a new blog ${createBlog.title} by ${createBlog.title} added`,
+        `a new blog ${newBlog.title} by ${newBlog.title} added`,
         3000,
         true
       )
     );
+
+    dispatch(setTypeOfNotification(true));
 
     setNewTitle("");
     setNewAuthor("");

@@ -2,8 +2,6 @@ import React from "react";
 import Blog from "./Blog";
 
 function BlogList({ currentUser, blogs, handleLike, handleDelete }) {
-  console.log(blogs);
-
   return (
     <div>
       {blogs

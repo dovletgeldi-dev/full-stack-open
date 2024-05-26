@@ -1,9 +1,9 @@
-import React, { useDebugValue } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { current } from "@reduxjs/toolkit";
+import React from "react";
+import { useSelector } from "react-redux";
 
-function Notifications({ isSuccess }) {
+function Notifications() {
   const notification = useSelector((state) => state.notifications);
+  const typeOfNotification = useSelector((state) => state.typeOfNotification);
 
   if (notification === null) {
     return null;
@@ -16,8 +16,8 @@ function Notifications({ isSuccess }) {
         padding: "1rem",
         margin: "1rem 0",
         borderRadius: "10px",
-        border: isSuccess ? "3px solid green" : "3px solid red",
-        color: isSuccess ? "green" : "red",
+        border: typeOfNotification ? "3px solid green" : "3px solid red",
+        color: typeOfNotification ? "green" : "red",
         backgroundColor: "lightgray",
       }}
     >
