@@ -9,7 +9,7 @@ import BlogForm from "./components/BlogForm";
 import BlogList from "./components/BlogList";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotification } from "./redux/notificationSlice";
-import { createBlog, initialBlogs } from "./redux/blogSlice";
+import { createBlog, initialBlogs, likeBlog } from "./redux/blogSlice";
 import { setTypeOfNotification } from "./redux/notificationTypeSlice";
 
 const App = () => {
@@ -28,7 +28,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initialBlogs());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogUser");
@@ -66,49 +66,6 @@ const App = () => {
     setUser(null);
   };
 
-  const handleAddLike = (blogToAddLike) => {
-    const newUpdatedLikeBlog = {
-      ...blogToAddLike,
-      likes: ++blogToAddLike.likes,
-    };
-
-    blogService
-      .update(blogToAddLike.id, newUpdatedLikeBlog)
-      .then((response) => {
-        setBlogs(
-          blogs.map((blog) => (blog.id !== blogToAddLike.id ? blog : response))
-        );
-      });
-  };
-
-  const handleDeleteBlog = (blogToDelete) => {
-    console.log(blogToDelete.id, blogToDelete.user.id, user.id);
-
-    if (
-      !window.confirm(
-        `Remove blog ${blogToDelete.title} by ${blogToDelete.author} ?`
-      )
-    ) {
-      return null;
-    } else {
-      blogService
-        .remove(blogToDelete)
-        .then(() => {
-          dispatch(setTypeOfNotification(true));
-          dispatch(
-            setNotification(
-              `Successfully removed ${blogToDelete.title} by ${blogToDelete.author} from blogs`,
-              3000
-            )
-          );
-          setBlogs(blogs.filter((blog) => blog.id !== blogToDelete.id));
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  };
-
   return (
     <div>
       <h1>Blog App</h1>
@@ -136,12 +93,7 @@ const App = () => {
 
           <h2>blogs</h2>
 
-          <BlogList
-            currentUser={user}
-            blogs={blogs}
-            handleLike={handleAddLike}
-            handleDelete={handleDeleteBlog}
-          />
+          <BlogList currentUser={user} blogs={blogs} />
         </div>
       )}
     </div>

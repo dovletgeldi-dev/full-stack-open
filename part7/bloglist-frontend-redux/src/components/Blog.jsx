@@ -1,6 +1,12 @@
 import { useState } from "react";
+import { deleteBlog, likeBlog } from "../redux/blogSlice";
+import { setNotification } from "../redux/notificationSlice";
+import { setTypeOfNotification } from "../redux/notificationTypeSlice";
+import { useDispatch } from "react-redux";
 
-const Blog = ({ currentUser, blog, handleLike, handleDelete }) => {
+const Blog = ({ currentUser, blog }) => {
+  const dispatch = useDispatch();
+
   const [visible, setVisible] = useState(false);
 
   const toggleVisibility = () => {
@@ -8,6 +14,39 @@ const Blog = ({ currentUser, blog, handleLike, handleDelete }) => {
   };
 
   const showDelete = currentUser.name === blog.user.name ? true : false;
+
+  const handleAddLike = (blogToAddLike) => {
+    console.log(blogToAddLike);
+
+    const newUpdatedLikeBlog = {
+      ...blogToAddLike,
+      likes: blogToAddLike.likes + 1,
+    };
+    dispatch(likeBlog(blogToAddLike.id, newUpdatedLikeBlog));
+    dispatch(setTypeOfNotification(true));
+    dispatch(setNotification(`you liked '${blogToAddLike.title}'`, 3000));
+  };
+
+  const handleDeleteBlog = (blogToDelete) => {
+    console.log(blogToDelete.id, blogToDelete.user.id, currentUser);
+
+    if (
+      !window.confirm(
+        `Remove blog ${blogToDelete.title} by ${blogToDelete.author} ?`
+      )
+    ) {
+      return null;
+    } else {
+      dispatch(deleteBlog(blogToDelete));
+      dispatch(setTypeOfNotification(true));
+      dispatch(
+        setNotification(
+          `Successfully removed ${blogToDelete.title} by ${blogToDelete.author} from blogs`,
+          3000
+        )
+      );
+    }
+  };
 
   return (
     <div
@@ -33,7 +72,7 @@ const Blog = ({ currentUser, blog, handleLike, handleDelete }) => {
           <p>{blog.url}</p>
           <p data-testid="likes">
             {blog.likes}
-            <button id="like-button" onClick={() => handleLike(blog)}>
+            <button id="like-button" onClick={() => handleAddLike(blog)}>
               like
             </button>
           </p>
@@ -48,7 +87,7 @@ const Blog = ({ currentUser, blog, handleLike, handleDelete }) => {
                 backgroundColor: "red",
                 color: "white",
               }}
-              onClick={() => handleDelete(blog)}
+              onClick={() => handleDeleteBlog(blog)}
             >
               remove
             </button>
