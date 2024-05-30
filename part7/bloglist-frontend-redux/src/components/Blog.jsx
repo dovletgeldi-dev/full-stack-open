@@ -2,10 +2,11 @@ import { useState } from "react";
 import { deleteBlog, initialBlogs, likeBlog } from "../redux/blogSlice";
 import { setNotification } from "../redux/notificationSlice";
 import { setTypeOfNotification } from "../redux/notificationTypeSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Blog = ({ currentUser, blog }) => {
   const dispatch = useDispatch();
+  const loginUser = useSelector((state) => state.login);
 
   const [visible, setVisible] = useState(false);
 
@@ -13,7 +14,7 @@ const Blog = ({ currentUser, blog }) => {
     setVisible(!visible);
   };
 
-  const showDelete = currentUser.name === blog.user.name ? true : false;
+  const showDelete = loginUser.name === blog.user.name ? true : false;
 
   const handleAddLike = (blogToAddLike) => {
     console.log(blogToAddLike);

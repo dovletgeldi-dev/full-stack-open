@@ -1,17 +1,18 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createBlog } from "../redux/blogSlice";
 import { setNotification } from "../redux/notificationSlice";
 import { setTypeOfNotification } from "../redux/notificationTypeSlice";
 
 function BlogForm({ user }) {
   const dispatch = useDispatch();
+  const loginUser = useSelector((state) => state.login);
 
   const [newTitle, setNewTitle] = useState("");
   const [newAuthor, setNewAuthor] = useState("");
   const [newUrl, setNewUrl] = useState("");
   const [newLikes, setNewLikes] = useState("");
-  const [userId, setUser] = useState(user.id);
+  const [userId, setUser] = useState(loginUser.id);
 
   const addBlog = (event) => {
     event.preventDefault();

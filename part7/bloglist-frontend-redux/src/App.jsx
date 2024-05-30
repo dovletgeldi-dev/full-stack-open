@@ -8,10 +8,10 @@ import BlogForm from "./components/BlogForm";
 import BlogList from "./components/BlogList";
 import { useDispatch, useSelector } from "react-redux";
 import { initialBlogs } from "./redux/blogSlice";
+import { loadUsers } from "./redux/userSlice";
 
 const App = () => {
-  const blogs = useSelector((state) => state.blogs);
-  const user = useSelector((state) => state.login);
+  const loginUser = useSelector((state) => state.login);
 
   const blogFormRef = useRef();
 
@@ -19,10 +19,12 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initialBlogs());
-    if (user === null) {
+    dispatch(loadUsers());
+
+    if (loginUser === null) {
       return;
     } else {
-      blogService.setToken(user.token);
+      blogService.setToken(loginUser.token);
     }
   }, [dispatch]);
 
@@ -31,7 +33,7 @@ const App = () => {
       <h1>Blog App</h1>
       <Notifications />
 
-      {user === null ? (
+      {loginUser === null ? (
         <Togglable buttonLabel="login">
           <LoginForm />
         </Togglable>
@@ -42,12 +44,12 @@ const App = () => {
           <h2>create new blog</h2>
 
           <Togglable buttonLabel="new blog" ref={blogFormRef}>
-            <BlogForm user={user} />
+            <BlogForm />
           </Togglable>
 
           <h2>blogs</h2>
 
-          <BlogList user={user} blogs={blogs} />
+          <BlogList />
         </div>
       )}
     </div>

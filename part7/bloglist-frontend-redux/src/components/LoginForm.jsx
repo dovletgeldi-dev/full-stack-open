@@ -16,17 +16,8 @@ function LoginForm() {
     event.preventDefault();
 
     dispatch(initialLogin({ username, password }));
-
-    try {
-      dispatch(setNotification("Logged in successfully!", 3000));
-      dispatch(setTypeOfNotification(true));
-      setUsername("");
-      setPassword("");
-    } catch (error) {
-      console.log(error);
-      dispatch(setTypeOfNotification(false));
-      dispatch(setNotification("Wrong username or password", 3000));
-    }
+    setUsername("");
+    setPassword("");
   };
 
   return (
