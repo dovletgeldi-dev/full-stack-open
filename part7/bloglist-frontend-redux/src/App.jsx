@@ -9,6 +9,7 @@ import BlogList from "./components/BlogList";
 import { useDispatch, useSelector } from "react-redux";
 import { initialBlogs } from "./redux/blogSlice";
 import { loadUsers } from "./redux/userSlice";
+import Blog from "./components/Blog";
 
 const App = () => {
   const loginUser = useSelector((state) => state.login);

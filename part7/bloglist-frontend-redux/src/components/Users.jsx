@@ -2,13 +2,11 @@ import React, { useEffect } from "react";
 import LoggedUser from "./LoggedUser";
 import { useDispatch, useSelector } from "react-redux";
 import { loadUsers } from "../redux/userSlice";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Users() {
   const users = useSelector((state) => state.users);
-  const loginUser = useSelector((state) => state.login);
 
-  console.log(users.name);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -31,7 +29,7 @@ function Users() {
           <tbody>
             {users.map((user) => (
               <tr key={user.id}>
-                <td>{user.name}</td>
+                <td>{<Link to={`/users/${user.id}`}>{user.name}</Link>}</td>
                 <td>{user.blogs.length}</td>
               </tr>
             ))}

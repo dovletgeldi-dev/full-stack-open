@@ -4,7 +4,7 @@ import { setNotification } from "../redux/notificationSlice";
 import { setTypeOfNotification } from "../redux/notificationTypeSlice";
 import { useDispatch, useSelector } from "react-redux";
 
-const Blog = ({ currentUser, blog }) => {
+const Blog = ({ blog }) => {
   const dispatch = useDispatch();
   const loginUser = useSelector((state) => state.login);
 
@@ -30,7 +30,7 @@ const Blog = ({ currentUser, blog }) => {
   };
 
   const handleDeleteBlog = (blogToDelete) => {
-    console.log(blogToDelete.id, blogToDelete.user.id, currentUser.id);
+    console.log(blogToDelete.id, blogToDelete.user.id, loginUser.id);
 
     if (
       !window.confirm(

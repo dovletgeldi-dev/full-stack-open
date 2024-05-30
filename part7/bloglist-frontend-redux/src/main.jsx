@@ -5,6 +5,7 @@ import { store } from "./store";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import NotFoundPage from "./components/NotFoundPage";
 import Users from "./components/Users";
+import UsersBlogs from "./components/UsersBlogs";
 
 const router = createBrowserRouter([
   {
@@ -13,6 +14,7 @@ const router = createBrowserRouter([
     errorElement: <NotFoundPage />,
   },
   { path: "users", element: <Users /> },
+  { path: "users/:userId", element: <UsersBlogs /> },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

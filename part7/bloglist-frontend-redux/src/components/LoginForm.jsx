@@ -1,12 +1,8 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setNotification } from "../redux/notificationSlice";
-import { setTypeOfNotification } from "../redux/notificationTypeSlice";
-import { initialLogin, setLogin } from "../redux/loginSlice";
+import { useDispatch } from "react-redux";
+import { initialLogin } from "../redux/loginSlice";
 
 function LoginForm() {
-  const user = useSelector((state) => state.login);
-
   const dispatch = useDispatch();
 
   const [username, setUsername] = useState("");
