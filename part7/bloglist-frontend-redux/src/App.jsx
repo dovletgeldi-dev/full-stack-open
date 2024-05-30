@@ -1,29 +1,28 @@
 import { useEffect, useRef } from "react";
 import blogService from "./services/blogs";
 import Notifications from "./components/Notifications";
-import LoginForm from "./components/LoginForm";
 import Togglable from "./components/Togglable";
-import LoggedUser from "./components/LoggedUser";
 import BlogForm from "./components/BlogForm";
-import BlogList from "./components/BlogList";
 import { useDispatch, useSelector } from "react-redux";
 import { initialBlogs } from "./redux/blogSlice";
 import { loadUsers } from "./redux/userSlice";
-import Blog from "./components/Blog";
+import { Outlet, useNavigate } from "react-router-dom";
+import Navbar from "./components/Navbar";
 
 const App = () => {
   const loginUser = useSelector((state) => state.login);
 
-  const blogFormRef = useRef();
-
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const blogFormRef = useRef();
 
   useEffect(() => {
     dispatch(initialBlogs());
     dispatch(loadUsers());
 
     if (loginUser === null) {
-      return;
+      navigate("/login");
     } else {
       blogService.setToken(loginUser.token);
     }
@@ -31,28 +30,14 @@ const App = () => {
 
   return (
     <div>
-      <h1>Blog App</h1>
+      <Navbar />
       <Notifications />
 
-      {loginUser === null ? (
-        <Togglable buttonLabel="login">
-          <LoginForm />
-        </Togglable>
-      ) : (
-        <div>
-          <LoggedUser />
-
-          <h2>create new blog</h2>
-
-          <Togglable buttonLabel="new blog" ref={blogFormRef}>
-            <BlogForm />
-          </Togglable>
-
-          <h2>blogs</h2>
-
-          <BlogList />
-        </div>
-      )}
+      <h1>Blog App</h1>
+      <Togglable buttonLabel="new blog" ref={blogFormRef}>
+        <BlogForm />
+      </Togglable>
+      <Outlet />
     </div>
   );
 };

@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import LoggedUser from "./LoggedUser";
 import { useDispatch, useSelector } from "react-redux";
 import { loadUsers } from "../redux/userSlice";
 import { Link } from "react-router-dom";
@@ -15,8 +14,6 @@ function Users() {
 
   return (
     <div>
-      <h1>Blog App</h1>
-      <LoggedUser />
       <h1>Users</h1>
       <div>
         <table>

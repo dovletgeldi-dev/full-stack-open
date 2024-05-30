@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import LoggedUser from "./LoggedUser";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loadUsers } from "../redux/userSlice";
@@ -24,8 +23,6 @@ function UsersBlogs() {
 
   return (
     <div>
-      <h1>Blog App</h1>
-      <LoggedUser />
       <h2>{user.name}</h2>
       <h3>added blogs</h3>
       <ul>

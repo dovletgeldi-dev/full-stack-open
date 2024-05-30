@@ -10,6 +10,7 @@ function BlogList() {
   );
   return (
     <div>
+      <h2>blogs</h2>
       {sortedBlogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
       ))}

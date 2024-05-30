@@ -4,7 +4,6 @@ import { setNotification } from "../redux/notificationSlice";
 import { setTypeOfNotification } from "../redux/notificationTypeSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import LoggedUser from "./LoggedUser";
 
 function BlogDetails() {
   const blogs = useSelector((state) => state.blogs);
@@ -64,8 +63,6 @@ function BlogDetails() {
 
   return (
     <div>
-      <h1>Blog App</h1>
-      <LoggedUser />
       <h2>
         {blog.title} {blog.author}
       </h2>

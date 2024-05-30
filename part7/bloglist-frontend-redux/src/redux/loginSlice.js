@@ -24,10 +24,15 @@ export const { setLogin, logOut } = loginSlice.actions;
 
 export const initialLogin = (newUser) => {
   return async (dispatch) => {
-    const user = await loginService.login(newUser);
-    window.localStorage.setItem("loggedBlogUser", JSON.stringify(user));
-    blogService.setToken(user.token);
-    dispatch(setLogin(user));
+    try {
+      const user = await loginService.login(newUser);
+      window.localStorage.setItem("loggedBlogUser", JSON.stringify(user));
+      blogService.setToken(user.token);
+      dispatch(setLogin(user));
+      return true;
+    } catch (error) {
+      return false;
+    }
   };
 };
 
