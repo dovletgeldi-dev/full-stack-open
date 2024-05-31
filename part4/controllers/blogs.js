@@ -1,8 +1,6 @@
-const jwt = require("jsonwebtoken");
-const config = require("../utils/config");
 const blogsRouter = require("express").Router();
+const { request } = require("../app");
 const Blog = require("../models/blog");
-const User = require("../models/user");
 
 blogsRouter.get("/", async (request, response, next) => {
   const blogs = await Blog.find({}).populate("user", { username: 1, name: 1 });
@@ -47,6 +45,35 @@ blogsRouter.post("/", async (request, response) => {
   await user.save();
 
   response.status(201).json(savedBlog);
+});
+
+blogsRouter.post("/:id/comments", async (request, response) => {
+  const comment = request.body.text; // Get comment content from request body
+  const blog = await Blog.findById(request.params.id); // Find the blog by ID
+
+  try {
+    if (!blog) {
+      return response.status(404).json({ message: "blog not found" });
+    }
+
+    const newComment = {
+      text: comment,
+    };
+
+    if (newComment.text === "") {
+      return response.status(404).json({ message: "comment cannot be empty" });
+    }
+
+    blog.comments.push(newComment);
+
+    // Save the updated blog with the added comment
+    const savedBlog = await blog.save();
+
+    response.status(201).json(savedBlog);
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ message: "Internal Server Error" });
+  }
 });
 
 blogsRouter.delete("/:id", async (request, response) => {

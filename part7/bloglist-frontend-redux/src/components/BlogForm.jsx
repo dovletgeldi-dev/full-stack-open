@@ -3,9 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { createBlog } from "../redux/blogSlice";
 import { setNotification } from "../redux/notificationSlice";
 import { setTypeOfNotification } from "../redux/notificationTypeSlice";
+import { useNavigate } from "react-router-dom";
 
 function BlogForm({ user }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const loginUser = useSelector((state) => state.login);
 
   const [newTitle, setNewTitle] = useState("");
@@ -43,6 +46,8 @@ function BlogForm({ user }) {
     setNewAuthor("");
     setNewUrl("");
     setNewLikes("");
+
+    navigate("/blogs");
   };
   return (
     <form onSubmit={addBlog}>

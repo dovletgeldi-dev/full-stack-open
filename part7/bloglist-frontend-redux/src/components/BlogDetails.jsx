@@ -56,7 +56,7 @@ function BlogDetails() {
           3000
         )
       );
-      navigate("/");
+      navigate("/blogs");
       dispatch(initialBlogs());
     }
   };
@@ -90,6 +90,13 @@ function BlogDetails() {
           remove
         </button>
       ) : null}
+
+      <h3>comments</h3>
+      <ul>
+        {blog.comments.map((comment) => (
+          <li>{comment.text}</li>
+        ))}
+      </ul>
     </div>
   );
 }
