@@ -1,5 +1,10 @@
-import React, { useEffect } from "react";
-import { deleteBlog, initialBlogs, likeBlog } from "../redux/blogSlice";
+import React, { useEffect, useState } from "react";
+import {
+  addComment,
+  deleteBlog,
+  initialBlogs,
+  likeBlog,
+} from "../redux/blogSlice";
 import { setNotification } from "../redux/notificationSlice";
 import { setTypeOfNotification } from "../redux/notificationTypeSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,11 +20,11 @@ function BlogDetails() {
 
   const blog = blogs.find((blog) => blog.id === paramsId);
 
+  const [comment, setComment] = useState("");
+
   useEffect(() => {
     dispatch(initialBlogs());
   }, [dispatch]);
-
-  // const showDelete = loginUser.name === blog.user.name ? true : false;
 
   if (!blog) {
     return null;
@@ -61,6 +66,18 @@ function BlogDetails() {
     }
   };
 
+  const handleComment = (event) => {
+    event.preventDefault();
+
+    const newComment = {
+      text: comment,
+    };
+
+    dispatch(addComment(paramsId, newComment));
+
+    setComment("");
+  };
+
   return (
     <div>
       <h2>
@@ -92,6 +109,17 @@ function BlogDetails() {
       ) : null}
 
       <h3>comments</h3>
+      <form onSubmit={handleComment}>
+        <input
+          type="text"
+          name="Title"
+          value={comment}
+          onChange={({ target }) => setComment(target.value)}
+          required
+          placeholder="title"
+        />
+        <button type="submit">add comment</button>
+      </form>
       <ul>
         {blog.comments.map((comment) => (
           <li>{comment.text}</li>
